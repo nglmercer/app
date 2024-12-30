@@ -4,7 +4,14 @@ const path = require('path');
 const url = require('url');
 const app = express();
 const cors = require('cors');
-const server = require('http').createServer(app);
+const https = require('https');
+const RTCMultiConnectionServer = require('rtcmulticonnection-server');
+
+const credentials = {
+    key: fs.readFileSync('keys/private.key'),
+    cert: fs.readFileSync('keys/certificate.crt')
+};
+const server = https.createServer(credentials, app);
 const io = require('socket.io')(server, {
     cors: {
         origin: '*', // Cambia a la URL de tu cliente
@@ -12,7 +19,7 @@ const io = require('socket.io')(server, {
         credentials: true // Habilitar credenciales
     }
 });
-const RTCMultiConnectionServer = require('rtcmulticonnection-server');
+
 
 const PORT = process.env.PORT || 9001;
 const isUseHTTPs = false;
@@ -131,15 +138,13 @@ io.on('connection', socket => {
 RTCMultiConnectionServer.beforeHttpListen(server, config);
 server.listen(PORT, process.env.IP || "0.0.0.0", () => {
     RTCMultiConnectionServer.afterHttpListen(server, config);
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Socket.io is listening at: http://localhost:${PORT}/`);
-    console.log('You can use --ssl to enable HTTPs:');
-    console.log('\tnode server --ssl');
-    console.log('Your web-browser (HTML file) MUST set this line:');
-    console.log(`\tconnection.socketURL = "http://localhost:${PORT}/";`);
+    console.log(`Servidor HTTPS ejecutándose en puerto ${PORT}`);
+    console.log(`Socket.io escuchando en: https://localhost:${PORT}/`);
+    console.log('Tu navegador web (archivo HTML) DEBE establecer esta línea:');
+    console.log(`\tconnection.socketURL = "https://localhost:${PORT}/";`);
     if (config.enableAdmin) {
-        console.log(`Admin page is enabled and running on: http://localhost:${PORT}/admin/`);
-        console.log('\tAdmin page username:', config.adminUserName);
-        console.log('\tAdmin page password:', config.adminPassword);
+        console.log(`Página de administración habilitada en: https://localhost:${PORT}/admin/`);
+        console.log('\tUsuario admin:', config.adminUserName);
+        console.log('\tContraseña admin:', config.adminPassword);
     }
 });
