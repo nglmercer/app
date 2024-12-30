@@ -7,11 +7,10 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "fastify": "^4.21.0",
-    "handlebars": "^4.7.8",
-    "@fastify/formbody": "^7.4.0",
-    "@fastify/static": "^6.10.2",
-    "@fastify/view": "^8.0.0"
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "rtcmulticonnection-server": "latest",
+    "socket.io": "latest"
   },
   "engines": {
     "node": "14.x"
